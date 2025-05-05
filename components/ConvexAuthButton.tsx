@@ -6,7 +6,7 @@ import { useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { useEffect } from "react";
 import { Authenticated, Unauthenticated } from "convex/react";
-import { SignInButton, SignOutButton, UserButton } from "@clerk/clerk-react";
+import { SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
 
 export function ClerkAuthButton() {
   const { isAuthenticated, isLoading } = useConvexAuth();

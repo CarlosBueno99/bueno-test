@@ -31,147 +31,152 @@ export default function EditorPage() {
     }
   }, [permission, user, router]);
 
-  // If still loading or not authenticated, show loading state
-  if (!user || !permission) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow w-full max-w-5xl mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-8">Editor Dashboard</h1>
-          <Card>
-            <CardContent className="py-8 flex items-center justify-center">
-              <p>Loading...</p>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-    );
-  }
-
-  // Check if has at least editor permission
-  if (!["editor", "admin", "owner"].includes(permission)) {
-    router.push("/");
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow w-full max-w-5xl mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-8">Editor Dashboard</h1>
-          <Card>
-            <CardContent className="py-8 flex items-center justify-center">
-              <p>You need editor permissions to view this page.</p>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-    );
-  }
-  
-  const handleCreateNote = () => {
-    if (title && content) {
-      createNote({ title, content, accessLevel })
-        .then(() => {
-          setTitle("");
-          setContent("");
-        });
-    }
-  };
-  
-  const handleDeleteNote = (noteId: Id<"privateNotes">) => {
-    deleteNote({ noteId });
-  };
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow w-full max-w-5xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Editor Dashboard</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Create Note</CardTitle>
-              <CardDescription>Add a new private note</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="title" className="text-sm font-medium">Title</label>
-                  <Input 
-                    id="title" 
-                    value={title} 
-                    onChange={(e) => setTitle(e.target.value)} 
-                    placeholder="Note title" 
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label htmlFor="content" className="text-sm font-medium">Content</label>
-                  <textarea 
-                    id="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Note content"
-                    className="w-full min-h-20 p-2 border rounded-md"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <label htmlFor="access" className="text-sm font-medium">Minimum access level</label>
-                  <select 
-                    id="access"
-                    value={accessLevel}
-                    onChange={(e) => setAccessLevel(e.target.value)}
-                    className="w-full p-2 border rounded-md"
-                  >
-                    <option value="viewer">Viewer</option>
-                    <option value="editor">Editor</option>
-                    <option value="admin">Admin</option>
-                    <option value="owner">Owner</option>
-                  </select>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={handleCreateNote} disabled={!title || !content}>
-                Create Note
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Notes</CardTitle>
-              <CardDescription>Your current permission level: {permission}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {notes && notes.length > 0 ? (
-                  notes.map(note => (
-                    <div key={note._id} className="p-4 border rounded-md">
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-medium">{note.title}</h3>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => handleDeleteNote(note._id)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                      <p className="mt-2 text-sm">{note.content}</p>
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        Access level: {note.accessLevel}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No notes found. Create one to get started.</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+  try {
+    // If still loading or not authenticated, show loading state
+    if (!user || !permission) {
+      return (
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow w-full max-w-5xl mx-auto px-4">
+            <h1 className="text-3xl font-bold mb-8">Editor Dashboard</h1>
+            <Card>
+              <CardContent className="py-8 flex items-center justify-center">
+                <p>Loading...</p>
+              </CardContent>
+            </Card>
+          </main>
         </div>
-      </main>
-    </div>
-  );
+      );
+    }
+
+    // Check if has at least editor permission
+    if (!["editor", "admin", "owner"].includes(permission)) {
+      router.push("/");
+      return (
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow w-full max-w-5xl mx-auto px-4">
+            <h1 className="text-3xl font-bold mb-8">Editor Dashboard</h1>
+            <Card>
+              <CardContent className="py-8 flex items-center justify-center">
+                <p>You need editor permissions to view this page.</p>
+              </CardContent>
+            </Card>
+          </main>
+        </div>
+      );
+    }
+    
+    const handleCreateNote = () => {
+      if (title && content) {
+        createNote({ title, content, accessLevel })
+          .then(() => {
+            setTitle("");
+            setContent("");
+          });
+      }
+    };
+    
+    const handleDeleteNote = (noteId: Id<"privateNotes">) => {
+      deleteNote({ noteId });
+    };
+
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow w-full max-w-5xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-8">Editor Dashboard</h1>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create Note</CardTitle>
+                <CardDescription>Add a new private note</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label htmlFor="title" className="text-sm font-medium">Title</label>
+                    <Input 
+                      id="title" 
+                      value={title} 
+                      onChange={(e) => setTitle(e.target.value)} 
+                      placeholder="Note title" 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="content" className="text-sm font-medium">Content</label>
+                    <textarea 
+                      id="content"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Note content"
+                      className="w-full min-h-20 p-2 border rounded-md"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="access" className="text-sm font-medium">Minimum access level</label>
+                    <select 
+                      id="access"
+                      value={accessLevel}
+                      onChange={(e) => setAccessLevel(e.target.value)}
+                      className="w-full p-2 border rounded-md"
+                    >
+                      <option value="viewer">Viewer</option>
+                      <option value="editor">Editor</option>
+                      <option value="admin">Admin</option>
+                      <option value="owner">Owner</option>
+                    </select>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button onClick={handleCreateNote} disabled={!title || !content}>
+                  Create Note
+                </Button>
+              </CardFooter>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Notes</CardTitle>
+                <CardDescription>Your current permission level: {permission}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {notes && notes.length > 0 ? (
+                    notes.map(note => (
+                      <div key={note._id} className="p-4 border rounded-md">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-medium">{note.title}</h3>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => handleDeleteNote(note._id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                        <p className="mt-2 text-sm">{note.content}</p>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          Access level: {note.accessLevel}
+                        </p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No notes found. Create one to get started.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    );
+  } catch (error) {
+    console.error("Error in EditorPage:", error);
+    return <div>Something went wrong. Please try again later.</div>;
+  }
 } 

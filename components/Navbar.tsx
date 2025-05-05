@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from "./ui/dropdown-menu";
 import { LucideMenu } from "lucide-react";
-import { SignInButton, UserButton } from "@clerk/clerk-react";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { useEffect } from "react";
 

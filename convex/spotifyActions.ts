@@ -7,7 +7,7 @@ export const exchangeSpotifyCodeForToken = action({
   handler: async (ctx, args) => {
     const clientId = process.env.SPOTIFY_CLIENT_ID || "<YOUR_SPOTIFY_CLIENT_ID>";
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET || "<YOUR_SPOTIFY_CLIENT_SECRET>";
-    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || "https://yourdomain.com/admin/spotify-callback";
+    const redirectUri = process.env.SPOTIFY_REDIRECT_URI || "https://yourdomain.com/api/spotify-callback";
 
     try {
       const response = await fetch("https://accounts.spotify.com/api/token", {

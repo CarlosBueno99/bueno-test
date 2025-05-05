@@ -193,7 +193,7 @@ export default function AdminPage() {
                 onClick={() => {
                   const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID || "<YOUR_SPOTIFY_CLIENT_ID>";
                   const redirectUri = encodeURIComponent(
-                    process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || "https://yourdomain.com/admin/spotify-callback"
+                    process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI || "https://yourdomain.com/api/spotify-callback"
                   );
                   const scopes = encodeURIComponent("user-top-read user-read-email");
                   window.location.href =

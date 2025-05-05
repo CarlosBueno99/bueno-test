@@ -5,20 +5,25 @@ import { internalAction } from "./_generated/server";
 
 const crons = cronJobs();
 
-const MAIN_USER_ID = "js79ghjgj36j4kdnx2aq1skb3d7f8bkk";
-
 export const refreshMainUserSteamData = internalAction({
   args: {},
   handler: async (ctx) => {
+    // Query for the user with 'owner' permission using an internalQuery
+    const ownerUserId = await ctx.runQuery(internal.users.getOwnerUserId, {});
+    if (!ownerUserId) {
+      console.error("No user with 'owner' permission found");
+      return;
+    }
+    const MAIN_USER_ID = ownerUserId as Id<"users">;
     const settings = await ctx.runQuery(internal.websiteSettings.getWebsiteSettings, {
-      userId: MAIN_USER_ID as Id<"users">,
+      userId: MAIN_USER_ID,
     });
     if (!settings || !settings.steamApiKey || !settings.steamId) {
       console.error("Steam API key or steamId not set in websiteSettings for main user");
       return;
     }
     await ctx.runAction(api.steamApi.refreshSteamData, {
-      userId: MAIN_USER_ID as Id<"users">,
+      userId: MAIN_USER_ID,
       steamApiKey: settings.steamApiKey,
       steamId: settings.steamId,
     });

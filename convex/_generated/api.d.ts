@@ -24,6 +24,7 @@ import type * as spotifyQueries from "../spotifyQueries.js";
 import type * as steamApi from "../steamApi.js";
 import type * as steamQueries from "../steamQueries.js";
 import type * as tasks from "../tasks.js";
+import type * as users from "../users.js";
 import type * as websiteSettings from "../websiteSettings.js";
 
 /**
@@ -46,6 +47,7 @@ declare const fullApi: ApiFromModules<{
   steamApi: typeof steamApi;
   steamQueries: typeof steamQueries;
   tasks: typeof tasks;
+  users: typeof users;
   websiteSettings: typeof websiteSettings;
 }>;
 export declare const api: FilterApi<

@@ -1,0 +1,58 @@
+/* eslint-disable */
+/**
+ * Generated `api` utility.
+ *
+ * THIS CODE IS AUTOMATICALLY GENERATED.
+ *
+ * To regenerate, run `npx convex dev`.
+ * @module
+ */
+
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
+import type * as _internal_spotifyData from "../_internal/spotifyData.js";
+import type * as _internal_steamData from "../_internal/steamData.js";
+import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
+import type * as privateNotes from "../privateNotes.js";
+import type * as spotifyActions from "../spotifyActions.js";
+import type * as spotifyApi from "../spotifyApi.js";
+import type * as spotifyQueries from "../spotifyQueries.js";
+import type * as steamApi from "../steamApi.js";
+import type * as steamQueries from "../steamQueries.js";
+import type * as tasks from "../tasks.js";
+import type * as websiteSettings from "../websiteSettings.js";
+
+/**
+ * A utility for referencing Convex functions in your app's API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
+declare const fullApi: ApiFromModules<{
+  "_internal/spotifyData": typeof _internal_spotifyData;
+  "_internal/steamData": typeof _internal_steamData;
+  auth: typeof auth;
+  crons: typeof crons;
+  privateNotes: typeof privateNotes;
+  spotifyActions: typeof spotifyActions;
+  spotifyApi: typeof spotifyApi;
+  spotifyQueries: typeof spotifyQueries;
+  steamApi: typeof steamApi;
+  steamQueries: typeof steamQueries;
+  tasks: typeof tasks;
+  websiteSettings: typeof websiteSettings;
+}>;
+export declare const api: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "public">
+>;
+export declare const internal: FilterApi<
+  typeof fullApi,
+  FunctionReference<any, "internal">
+>;

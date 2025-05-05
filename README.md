@@ -1,3 +1,72 @@
+# Portfolio App with Convex and Clerk
+
+This application uses Convex for the backend and Clerk for authentication.
+
+## Setup
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up Clerk:
+   - Sign up for [Clerk](https://clerk.com)
+   - Create a new application in Clerk
+   - In the JWT Templates section of your Clerk dashboard:
+     - Click "+ New template" and choose "Convex"
+     - Copy the Issuer URL
+     - Hit "Apply Changes" (don't rename the JWT token, it must be called `convex`)
+   - In the API Keys section of the Clerk dashboard:
+     - Copy the Publishable Key
+     - Copy the Secret Key
+
+4. Set up environment variables:
+   - Create a `.env.local` file with the following:
+```
+# Convex
+NEXT_PUBLIC_CONVEX_URL="your_convex_url"
+
+# Clerk
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_..."
+CLERK_SECRET_KEY="sk_test_..."
+CLERK_ISSUER_URL="https://your-clerk-instance.clerk.accounts.dev/"
+```
+
+5. Sync your auth configuration:
+```bash
+npx convex dev
+```
+
+6. Run the development server:
+```bash
+npm run dev
+```
+
+## Features
+
+- User authentication with Clerk
+- Role-based access control
+- Steam and Spotify data integration
+- Dashboard to display user stats
+
+## App Structure
+
+- `app/`: Next.js app directory with pages and layouts
+- `components/`: UI components
+- `convex/`: Convex backend code including database schema, queries, and mutations
+  - `auth.ts`: Authentication logic
+  - `schema.ts`: Database schema definition
+  - `auth.config.ts`: Authentication configuration for Clerk
+
+## Authentication Flow
+
+1. The user clicks the Sign In button
+2. Clerk handles the authentication process
+3. After successful authentication, Clerk provides a JWT
+4. Convex validates the JWT and identifies the user
+5. Based on the user's permissions, different parts of the app are accessible
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

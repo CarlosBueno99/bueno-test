@@ -1,9 +1,9 @@
 "use node";
 
-import { action } from "./_generated/server";
+import { action, internalAction } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { Id } from "./_generated/dataModel";
-import { internal } from "./_generated/api";
+import { internal, api } from "./_generated/api";
 
 // Define return type for steamData mutation
 type SteamDataResponse = {
@@ -97,6 +97,8 @@ export const refreshSteamData = action({
         lastUpdated: Date.now(),
       };
 
+      console.log(payload);
+
       // Use the internal mutation to store this data
       const result: Id<"steamData"> = await ctx.runMutation(internal._internal.steamData.storeSteamData, payload);
       
@@ -104,5 +106,31 @@ export const refreshSteamData = action({
     } catch (error: any) {
       return { success: false, error: error.message };
     }
+  },
+});
+
+export const refreshMainUserSteamData = internalAction({
+  args: {},
+  handler: async (ctx) => {
+    // Find the user with 'owner' permission
+    const ownerUserId = await ctx.runQuery(internal.users.getOwnerUserId, {});
+    if (!ownerUserId) {
+      console.error("No user with 'owner' permission found");
+      return;
+    }
+    // Get Steam API key and Steam ID from websiteSettings
+    const settings = await ctx.runQuery(internal.websiteSettings.getWebsiteSettings, {
+      userId: ownerUserId,
+    });
+    if (!settings || !settings.steamApiKey || !settings.steamId) {
+      console.error("Steam API key or steamId not set in websiteSettings for main user");
+      return;
+    }
+    // Call the refreshSteamData action for the main user
+    await ctx.runAction(api.steamApi.refreshSteamData, {
+      userId: ownerUserId,
+      steamApiKey: settings.steamApiKey,
+      steamId: settings.steamId,
+    });
   },
 }); 

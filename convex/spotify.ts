@@ -94,6 +94,7 @@ export const refreshSpotifyData = internalAction({
     // Fetch top artists
     let topArtists: any[] = [];
     let topGenres: Record<string, number> = {};
+    let recentlyPlayedTracks: any[] = [];
     try {
       const response: Response = await fetch("https://api.spotify.com/v1/me/top/artists?limit=10", {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -117,6 +118,29 @@ export const refreshSpotifyData = internalAction({
     } catch (err: any) {
       return { success: false, error: "Failed to fetch top artists: " + (err instanceof Error ? err.message : String(err)) };
     }
+    // Fetch recently played tracks
+    console.log("[refreshSpotifyData] About to fetch recently played tracks");
+    try {
+      const response = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=10", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await response.json();
+      console.log("[refreshSpotifyData] Spotify recently played API response:", data.items);
+      if (response.ok && data.items) {
+        recentlyPlayedTracks = data.items.map((item: any) => ({
+          name: item.track.name,
+          artists: item.track.artists.map((a: any) => a.name),
+          album: item.track.album.name,
+          imageUrl: item.track.album.images[0]?.url,
+          playedAt: item.played_at,
+        }));
+      }
+    } catch (err: any) {
+      // Non-fatal: just skip if error
+      recentlyPlayedTracks = [];
+    }
+    console.log("[refreshSpotifyData] Finished fetch recently played tracks block");
+    console.log("[refreshSpotifyData] recentlyPlayedTracks to be saved:", recentlyPlayedTracks);
     const topGenresArr = Object.entries(topGenres)
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => (b.count as number) - (a.count as number))
@@ -127,6 +151,7 @@ export const refreshSpotifyData = internalAction({
         topArtists,
         topGenres: topGenresArr,
         lastUpdated: Date.now(),
+        recentlyPlayedTracks: recentlyPlayedTracks ?? [],
       });
     } catch (err: any) {
       return { success: false, error: "Failed to save Spotify data: " + (err instanceof Error ? err.message : String(err)) };
@@ -164,6 +189,15 @@ export const getSpotifyData = query({
       })
     ),
     lastUpdated: v.number(),
+    recentlyPlayedTracks: v.array(
+      v.object({
+        name: v.string(),
+        artists: v.array(v.string()),
+        album: v.string(),
+        imageUrl: v.string(),
+        playedAt: v.string(),
+      })
+    ),
   })),
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -189,6 +223,7 @@ export const getSpotifyData = query({
       lastUpdated: spotifyData.lastUpdated,
       topArtists: spotifyData.topArtists,
       topGenres: spotifyData.topGenres,
+      recentlyPlayedTracks: spotifyData.recentlyPlayedTracks ?? [],
     };
   },
 });
@@ -217,12 +252,31 @@ export const getUserSpotifyData = query({
       })
     ),
     lastUpdated: v.number(),
+    recentlyPlayedTracks: v.array(
+      v.object({
+        name: v.string(),
+        artists: v.array(v.string()),
+        album: v.string(),
+        imageUrl: v.string(),
+        playedAt: v.string(),
+      })
+    ),
   })),
   handler: async (ctx, args) => {
-    return await ctx.db
+    const spotifyData = await ctx.db
       .query("spotifyData")
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .unique();
+    if (!spotifyData) return null;
+    return {
+      _id: spotifyData._id,
+      _creationTime: spotifyData._creationTime,
+      userId: spotifyData.userId,
+      lastUpdated: spotifyData.lastUpdated,
+      topArtists: spotifyData.topArtists,
+      topGenres: spotifyData.topGenres,
+      recentlyPlayedTracks: spotifyData.recentlyPlayedTracks ?? [],
+    };
   },
 });
 

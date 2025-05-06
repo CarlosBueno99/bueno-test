@@ -149,12 +149,6 @@ function DashboardContent() {
 
   // --- Spotify: Last Songs Played and Currently Playing ---
   const spotifyUserId: Id<'users'> | undefined = user?._id ?? ownerUserId ?? undefined;
-  const getRecentlyPlayedTracks = useAction(api.spotify.getRecentlyPlayedTracks);
-  const [recentlyPlayed, setRecentlyPlayed] = useState<any[] | null>(null);
-  useEffect(() => {
-    if (!spotifyUserId) return;
-    getRecentlyPlayedTracks({ userId: spotifyUserId }).then(setRecentlyPlayed);
-  }, [spotifyUserId, getRecentlyPlayedTracks]);
   const getCurrentlyPlayingTrack = useAction(api.spotify.getCurrentlyPlayingTrack);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<CurrentlyPlaying | null>(null);
   useEffect(() => {
@@ -350,16 +344,16 @@ function DashboardContent() {
                 <CardTitle>Last Songs Played</CardTitle>
               </CardHeader>
               <CardContent>
-                {recentlyPlayed && recentlyPlayed.length > 0 ? (
+                {(showMainSpotify ? mainSpotifyData! : spotifyData!).recentlyPlayedTracks && (showMainSpotify ? mainSpotifyData! : spotifyData!).recentlyPlayedTracks.length > 0 ? (
                   <ul className="space-y-2">
-                    {recentlyPlayed.map((item: { track: SpotifyTrack }, i: number) => (
+                    {(showMainSpotify ? mainSpotifyData! : spotifyData!).recentlyPlayedTracks.map((track: SpotifyTrack, i: number) => (
                       <li key={i} className="flex items-center gap-3">
-                        <img src={item.track.imageUrl} alt={item.track.name} className="w-10 h-10 rounded-md" />
+                        <img src={track.imageUrl} alt={track.name} className="w-10 h-10 rounded-md" />
                         <div>
-                          <div className="font-medium">{item.track.name}</div>
-                          <div className="text-xs text-muted-foreground">{item.track.artists.join(", ")}</div>
-                          <div className="text-xs text-muted-foreground">{item.track.album}</div>
-                          <div className="text-xs text-muted-foreground">{item.track.playedAt ? new Date(item.track.playedAt).toLocaleTimeString() : ""}</div>
+                          <div className="font-medium">{track.name}</div>
+                          <div className="text-xs text-muted-foreground">{track.artists.join(", ")}</div>
+                          <div className="text-xs text-muted-foreground">{track.album}</div>
+                          <div className="text-xs text-muted-foreground">{track.playedAt ? new Date(track.playedAt).toLocaleTimeString() : ""}</div>
                         </div>
                       </li>
                     ))}

@@ -69,6 +69,15 @@ export default defineSchema({
       })
     ),
     lastUpdated: v.number(), // timestamp
+    recentlyPlayedTracks: v.optional(v.array(
+      v.object({
+        name: v.string(),
+        artists: v.array(v.string()),
+        album: v.string(),
+        imageUrl: v.string(),
+        playedAt: v.string(),
+      })
+    )),
   }).index("by_userId", ["userId"]),
 
   // Private notes table - requires permissions

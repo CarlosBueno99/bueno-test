@@ -1,4 +1,4 @@
-# Portfolio App with Convex and Clerk
+# Personal website that I use to play with some tech
 
 This application uses Convex for the backend and Clerk for authentication.
 

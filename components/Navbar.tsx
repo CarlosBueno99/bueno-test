@@ -55,7 +55,7 @@ export function Navbar() {
       <div className="w-full max-w-5xl mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center">
-            <img src="/image.png" alt="Portfolio Face" className="w-8 h-8 rounded-full object-cover mr-2" />
+            <img src="/image.png" alt="carlos's face" className="w-8 h-8 rounded-full object-cover mr-2" />
           </Link>
           <nav className="hidden md:flex gap-4">
             {navLinks.map((link) => (
@@ -71,6 +71,26 @@ export function Navbar() {
                 {link.name}
               </Link>
             ))}
+            <a
+              href="https://gpt.carlosbueno.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={
+                "text-muted-foreground hover:text-foreground"
+              }
+            >
+              GPT
+            </a>
+            <a
+              href="https://automation.carlosbueno.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={
+                "text-muted-foreground hover:text-foreground"
+              }
+            >
+              Automation
+            </a>
           </nav>
         </div>
 

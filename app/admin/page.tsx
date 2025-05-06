@@ -5,13 +5,13 @@ import { api } from "../../convex/_generated/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "../../components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "../../components/ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Id } from "../../convex/_generated/dataModel";
 import { Badge } from "../../components/ui/badge";
 
-export default function AdminPage() {
+function AdminPage() {
   const router = useRouter();
   const user = useQuery(api.auth.getMe);
   const permission = useQuery(api.auth.getUserPermission);
@@ -222,5 +222,14 @@ export default function AdminPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+// Suspense wrapper for AdminPage
+export default function AdminPageWrapper() {
+  return (
+    <Suspense>
+      <AdminPage />
+    </Suspense>
   );
 } 

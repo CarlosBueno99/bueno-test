@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useConvexAuth } from "convex/react";
+import { useQuery, useConvexAuth, useAction } from "convex/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { api } from "../convex/_generated/api";
@@ -14,7 +14,8 @@ import {
 import { LucideMenu } from "lucide-react";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated } from "convex/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Id } from "../convex/_generated/dataModel";
 
 export function Navbar() {
   const pathname = usePathname();

@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "../../components/Navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "../../components/ui/card";
 import { useEffect, useState } from "react";
@@ -16,6 +16,8 @@ export default function AdminPage() {
   const user = useQuery(api.auth.getMe);
   const permission = useQuery(api.auth.getUserPermission);
   const updateUserPermission = useMutation(api.auth.updateUserPermission);
+  const searchParams = useSearchParams();
+  const triggerSpotifyRefresh = useAction(api.spotify.triggerSpotifyRefresh);
 
   const [email, setEmail] = useState("");
   const [newPermission, setNewPermission] = useState("viewer");
@@ -29,6 +31,18 @@ export default function AdminPage() {
       router.push("/");
     }
   }, [permission, user, router]);
+
+  useEffect(() => {
+    if (searchParams.get("spotify") === "connected") {
+      setSuccessMessage("Spotify connected successfully! Your token is up to date.");
+      // Immediately refresh Spotify data for the current user
+      if (user?._id) {
+        triggerSpotifyRefresh({ userId: user._id });
+      }
+      // Optionally, remove the query param from the URL
+      router.replace("/admin", { scroll: false });
+    }
+  }, [searchParams, router, user?._id, triggerSpotifyRefresh]);
 
   // If still loading or not authenticated, show loading state
   if (!user || !permission) {

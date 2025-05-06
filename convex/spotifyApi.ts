@@ -31,7 +31,7 @@ export const refreshSpotifyData = action({
     args: { userId: Id<"users">; accessToken: string }
   ): Promise<SpotifyDataResponse> => {
     try {
-      // Fetch top artists from Spotify API
+      // Fetch top artists from Spotify API 
       const topArtistsResponse = await fetch(
         `${SPOTIFY_API_BASE_URL}/me/top/artists?time_range=short_term&limit=10`,
         {
@@ -68,6 +68,7 @@ export const refreshSpotifyData = action({
         .sort((a, b) => b.count - a.count)
         .slice(0, 5);
 
+      console.log("Top genres:", topGenres);
       // Save the data to our database
       const payload = {
         userId: args.userId,

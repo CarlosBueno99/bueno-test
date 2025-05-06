@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "../../../convex/_generated/api";
+
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -31,8 +35,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL(`/admin?error=missing_refresh_token`, request.url));
     }
 
-    // TODO: Save the refresh token to your backend (Convex, etc.)
-    // You can call a Convex action here if needed
+    // Save the refresh token to Convex
+    await convex.mutation(api.websiteSettings.saveSpotifyRefreshToken, { refreshToken: tokens.refresh_token });
 
     return NextResponse.redirect(new URL('/admin?spotify=connected', request.url));
   } catch (error) {

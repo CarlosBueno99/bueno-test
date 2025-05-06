@@ -70,8 +70,12 @@ export const refreshSpotifyData = internalAction({
 export const refreshAllSpotifyData = internalAction({
   args: {},
   handler: async (ctx: any): Promise<void> => {
-    // Only refresh for the main user
-    const mainUserId = "js79ghjgj36j4kdnx2aq1skb3d7f8bkk";
+    // Dynamically find the user with 'owner' permission
+    const mainUserId = await ctx.runQuery(internal.users.getOwnerUserId, {});
+    if (!mainUserId) {
+      console.error("No user with 'owner' permission found");
+      return;
+    }
     console.log("Calling refreshSpotifyData for main user", mainUserId);
     await ctx.runAction(
       internal.spotify.refreshSpotifyData,

@@ -278,6 +278,7 @@ export const getCurrentlyPlayingTrack = action({
       return null;
     }
     return {
+      id: data.item.id,
       name: data.item.name,
       artists: data.item.artists.map((a: any) => a.name),
       album: data.item.album.name,

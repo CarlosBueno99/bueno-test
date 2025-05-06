@@ -181,4 +181,12 @@ export const refreshAllSpotifyData = internalAction({
       { userId: mainUserId }
     );
   },
+});
+
+// Public action to trigger a refresh from the client
+export const triggerSpotifyRefresh = action({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args): Promise<any> => {
+    return await ctx.runAction(internal.spotifyActions.refreshSpotifyData, { userId: args.userId });
+  },
 }); 

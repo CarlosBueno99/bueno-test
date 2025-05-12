@@ -67,7 +67,7 @@ export default function LocationHistoryPage() {
   );
   const locations = userLocations && userLocations.length > 0 ? userLocations : ownerLocations;
 
-  // Set the latest location as the current location
+  // Set the latest location as the current location and recenter map
   useEffect(() => {
     if (locations && locations.length > 0) {
       setCurrentLocation({
@@ -75,6 +75,10 @@ export default function LocationHistoryPage() {
         appleMapsUrl: locations[0].url,
         timestamp: locations[0].insertedDate,
       });
+      // Recenter map on the latest location
+      if (mapRef.current) {
+        mapRef.current.setView([locations[0].latitude, locations[0].longitude], 16);
+      }
     }
   }, [locations]);
 

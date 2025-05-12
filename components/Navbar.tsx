@@ -30,9 +30,9 @@ export function Navbar() {
   // Permission-based links
   if (permission) {
     // Viewer can access stats
-    if (["viewer", "editor", "admin", "owner"].includes(permission)) {
-      navLinks.push({ name: "Stats", href: "/viewer" });
-    }
+    // if (["viewer", "editor", "admin", "owner"].includes(permission)) {
+    //   navLinks.push({ name: "Stats", href: "/viewer" });
+    // }
     
     // Editor can access notes
     if (["editor", "admin", "owner"].includes(permission)) {

@@ -34,10 +34,10 @@ export function Navbar() {
     //   navLinks.push({ name: "Stats", href: "/viewer" });
     // }
     
-    // Editor can access notes
-    if (["editor", "admin", "owner"].includes(permission)) {
-      navLinks.push({ name: "Notes", href: "/editor" });
-    }
+    // // Editor can access notes
+    // if (["editor", "admin", "owner"].includes(permission)) {
+    //   navLinks.push({ name: "Notes", href: "/editor" });
+    // }
     
     // Admin can access settings
     if (["admin", "owner"].includes(permission)) {

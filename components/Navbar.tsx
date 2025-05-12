@@ -48,6 +48,10 @@ export function Navbar() {
     if (permission === "owner") {
       navLinks.push({ name: "System", href: "/owner" });
     }
+    // Relatives or owner can access locations
+    if (["relatives", "owner"].includes(permission)) {
+      navLinks.push({ name: "Locations", href: "/location" });
+    }
   }
 
   return (

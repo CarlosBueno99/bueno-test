@@ -199,4 +199,15 @@ export async function hasPermission(
   const requiredLevel = permissionLevels[requiredPermission as keyof typeof permissionLevels] || 99;
 
   return userLevel >= requiredLevel;
-} 
+}
+
+export const getOwnerUserIdPublic = query({
+  args: {},
+  handler: async (ctx) => {
+    const ownerPermission = await ctx.db
+      .query("permissions")
+      .filter((q) => q.eq(q.field("role"), "owner"))
+      .first();
+    return ownerPermission ? ownerPermission.userId : null;
+  },
+}); 

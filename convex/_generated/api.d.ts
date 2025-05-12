@@ -17,6 +17,7 @@ import type * as _internal_spotifyData from "../_internal/spotifyData.js";
 import type * as _internal_steamData from "../_internal/steamData.js";
 import type * as auth from "../auth.js";
 import type * as crons from "../crons.js";
+import type * as locations from "../locations.js";
 import type * as privateNotes from "../privateNotes.js";
 import type * as spotify from "../spotify.js";
 import type * as spotifyActions from "../spotifyActions.js";
@@ -25,6 +26,7 @@ import type * as spotifyQueries from "../spotifyQueries.js";
 import type * as steamApi from "../steamApi.js";
 import type * as steamQueries from "../steamQueries.js";
 import type * as tasks from "../tasks.js";
+import type * as test from "../test.js";
 import type * as users from "../users.js";
 import type * as websiteSettings from "../websiteSettings.js";
 
@@ -41,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   "_internal/steamData": typeof _internal_steamData;
   auth: typeof auth;
   crons: typeof crons;
+  locations: typeof locations;
   privateNotes: typeof privateNotes;
   spotify: typeof spotify;
   spotifyActions: typeof spotifyActions;
@@ -49,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   steamApi: typeof steamApi;
   steamQueries: typeof steamQueries;
   tasks: typeof tasks;
+  test: typeof test;
   users: typeof users;
   websiteSettings: typeof websiteSettings;
 }>;

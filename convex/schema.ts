@@ -90,6 +90,15 @@ export default defineSchema({
     accessLevel: v.string(), // "viewer", "editor", "admin", "owner"
   }).index("by_userId", ["userId"]),
 
+  locations: defineTable({
+    userId: v.id("users"),
+    url: v.string(),
+    insertedDate: v.string(),
+    latitude: v.number(),
+    longitude: v.number(),
+    displayName: v.string(),
+  }),
+
   websiteSettings: defineTable({
     userId: v.id("users"),
     steamApiKey: v.optional(v.string()),
@@ -97,5 +106,6 @@ export default defineSchema({
     spotifyClientId: v.optional(v.string()),
     spotifyClientSecret: v.optional(v.string()),
     spotifyRefreshToken: v.optional(v.string()),
+    locationApiPassword: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
 }); 

@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { Id } from "./_generated/dataModel";
+import { ConvexError } from "convex/values";
 
 export const addLocation = mutation({
   args: {
@@ -12,6 +13,11 @@ export const addLocation = mutation({
     displayName: v.string(),
   },
   handler: async (ctx, args) => {
+    // Check if the user exists
+    const user = await ctx.db.get(args.userId);
+    if (!user) {
+      throw new ConvexError("User does not exist");
+    }
     return await ctx.db.insert("locations", {
       userId: args.userId,
       url: args.url,

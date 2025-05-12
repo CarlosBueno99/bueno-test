@@ -13,6 +13,16 @@ const MapContainer: any = dynamic(() => import("react-leaflet").then(mod => mod.
 const TileLayer: any = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
 const Marker: any = dynamic(() => import("react-leaflet").then(mod => mod.Marker), { ssr: false });
 const Popup: any = dynamic(() => import("react-leaflet").then(mod => mod.Popup), { ssr: false });
+const useMap: any = dynamic(() => import("react-leaflet").then(mod => mod.useMap), { ssr: false });
+
+// ChangeView component to handle map center updates
+function ChangeView({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, zoom);
+  }, [center, map, zoom]);
+  return null;
+}
 
 function extractCoordinatesFromAppleMapsUrl(url: string) {
   try {
@@ -67,7 +77,7 @@ export default function LocationHistoryPage() {
   );
   const locations = userLocations && userLocations.length > 0 ? userLocations : ownerLocations;
 
-  // Set the latest location as the current location and recenter map
+  // Set the latest location as the current location
   useEffect(() => {
     if (locations && locations.length > 0) {
       setCurrentLocation({
@@ -75,10 +85,6 @@ export default function LocationHistoryPage() {
         appleMapsUrl: locations[0].url,
         timestamp: locations[0].insertedDate,
       });
-      // Recenter map on the latest location
-      if (mapRef.current) {
-        mapRef.current.setView([locations[0].latitude, locations[0].longitude], 16);
-      }
     }
   }, [locations]);
 
@@ -251,6 +257,10 @@ export default function LocationHistoryPage() {
                     style={{ height: "100%", width: "100%" }}
                     whenCreated={(mapInstance: any) => { mapRef.current = mapInstance; }}
                   >
+                    <ChangeView 
+                      center={[Number(currentLocation.latitude), Number(currentLocation.longitude)]} 
+                      zoom={16} 
+                    />
                     <TileLayer
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       attribution="© OpenStreetMap contributors"

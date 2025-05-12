@@ -85,6 +85,13 @@ export default function LocationHistoryPage() {
         appleMapsUrl: locations[0].url,
         timestamp: locations[0].insertedDate,
       });
+      // Update map view when locations change
+      if (mapRef.current) {
+        mapRef.current.setView(
+          [locations[0].latitude, locations[0].longitude],
+          16
+        );
+      }
     }
   }, [locations]);
 
@@ -255,12 +262,8 @@ export default function LocationHistoryPage() {
                     center={[Number(currentLocation.latitude), Number(currentLocation.longitude)]}
                     zoom={16}
                     style={{ height: "100%", width: "100%" }}
-                    whenCreated={(mapInstance: any) => { mapRef.current = mapInstance; }}
+                    ref={mapRef}
                   >
-                    <ChangeView 
-                      center={[Number(currentLocation.latitude), Number(currentLocation.longitude)]} 
-                      zoom={16} 
-                    />
                     <TileLayer
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       attribution="© OpenStreetMap contributors"

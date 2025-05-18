@@ -1,0 +1,12 @@
+cool.carlosbueno.xyz {
+	reverse_proxy localhost:3000
+}
+
+backend.carlosbueno.xyz {
+    reverse_proxy localhost:3211
+}
+
+admin.carlosbueno.xyz {
+    reverse_proxy localhost:6791
+}
+

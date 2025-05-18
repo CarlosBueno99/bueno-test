@@ -108,4 +108,11 @@ export default defineSchema({
     spotifyRefreshToken: v.optional(v.string()),
     locationApiPassword: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
+
+  cs2Demos: defineTable({
+    fileId: v.string(), // The id of the original demo file in storage
+    parsedJson: v.any(), // The parsed JSON result
+    createdAt: v.number(), // Timestamp when parsed
+    updatedAt: v.optional(v.number()), // Timestamp when updated
+  }).index("by_fileId", ["fileId"]),
 }); 

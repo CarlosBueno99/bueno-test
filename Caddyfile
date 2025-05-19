@@ -1,5 +1,8 @@
 cool.carlosbueno.xyz {
-	reverse_proxy localhost:3000
+	reverse_proxy localhost:3000 {
+		header_up X-Forwarded-Host {host}
+		header_up X-Forwarded-Proto {scheme}
+	}
 }
 
 backend.carlosbueno.xyz {

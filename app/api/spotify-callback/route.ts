@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../convex/_generated/api";
+import { auth } from '@clerk/nextjs/server';
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
@@ -39,13 +40,30 @@ export async function GET(request: NextRequest) {
     });
 
     const tokens = await tokenResponse.json();
+    console.log(tokens);
 
     if (!tokens.refresh_token) {
       return NextResponse.redirect(new URL(`/admin?error=missing_refresh_token`, baseUrl));
     }
 
+    // Get Clerk session and JWT
+    const { userId, getToken } = await auth();
+    if (!userId) {
+      return NextResponse.redirect(new URL('/admin?error=not_authenticated', baseUrl));
+    }
+    const jwt = await getToken({ template: 'convex' });
+    if (!jwt) {
+      return NextResponse.redirect(new URL('/admin?error=missing_jwt', baseUrl));
+    }
+    convex.setAuth(jwt);
+
     // Save the refresh token to Convex
-    await convex.mutation(api.websiteSettings.saveSpotifyRefreshToken, { refreshToken: tokens.refresh_token });
+    try {
+      await convex.mutation(api.websiteSettings.saveSpotifyRefreshToken, { refreshToken: tokens.refresh_token });
+      console.log("Refresh token saved to Convex");
+    } catch (error) {
+      console.error(error);
+    }
 
     return NextResponse.redirect(new URL('/admin?spotify=connected', baseUrl));
   } catch (error) {

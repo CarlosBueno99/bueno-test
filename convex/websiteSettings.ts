@@ -1,3 +1,4 @@
+import { log } from "console";
 import { mutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -51,6 +52,8 @@ export const saveSpotifyRefreshToken = mutation({
     v.object({ success: v.literal(false), error: v.string() })
   ),
   handler: async (ctx, args) => {
+    console.log("Saving ctx:", await ctx.auth.getUserIdentity());
+    console.log("Saving Spotify refresh token:", args.refreshToken);
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return { success: false as const, error: "Not authenticated" };
@@ -75,6 +78,7 @@ export const saveSpotifyRefreshToken = mutation({
           spotifyRefreshToken: args.refreshToken,
         });
       }
+      
     } catch (err) {
       return { success: false as const, error: "Failed to save refresh token: " + (err instanceof Error ? err.message : String(err)) };
     }

@@ -2,11 +2,10 @@ cool.carlosbueno.xyz {
 	reverse_proxy localhost:3000
 }
 
-backend.carlosbueno.xyz {
-    reverse_proxy localhost:3211
+api.carlosbueno.xyz {
+	reverse_proxy localhost:3210
 }
 
-admin.carlosbueno.xyz {
-    reverse_proxy localhost:6791
+dashboard.carlosbueno.xyz {
+	reverse_proxy localhost:6791
 }
-

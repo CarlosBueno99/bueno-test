@@ -13,8 +13,6 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as _internal_cs2Demos from "../_internal/cs2Demos.js";
-import type * as _internal_cs2DemosMutation from "../_internal/cs2DemosMutation.js";
 import type * as _internal_spotifyData from "../_internal/spotifyData.js";
 import type * as _internal_steamData from "../_internal/steamData.js";
 import type * as auth from "../auth.js";
@@ -40,8 +38,6 @@ import type * as websiteSettings from "../websiteSettings.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  "_internal/cs2Demos": typeof _internal_cs2Demos;
-  "_internal/cs2DemosMutation": typeof _internal_cs2DemosMutation;
   "_internal/spotifyData": typeof _internal_spotifyData;
   "_internal/steamData": typeof _internal_steamData;
   auth: typeof auth;

@@ -107,8 +107,11 @@ async function getSpotifyAccessToken(ctx: any, userId: Id<"users">): Promise<str
     .withIndex("by_userId", (q: any) => q.eq("userId", userId))
     .unique();
   if (!settings?.spotifyRefreshToken) return null;
-  const clientId = process.env.SPOTIFY_CLIENT_ID || "<YOUR_SPOTIFY_CLIENT_ID>";
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET || "<YOUR_SPOTIFY_CLIENT_SECRET>";
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+  if (!clientId || !clientSecret) {
+    throw new Error("SPOTIFY_CLIENT_ID or SPOTIFY_CLIENT_SECRET environment variable is missing");
+  }
   try {
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
@@ -121,6 +124,7 @@ async function getSpotifyAccessToken(ctx: any, userId: Id<"users">): Promise<str
       }),
     });
     const data = await response.json();
+    console.log("Spotify access token response:", data);
     if (!response.ok || !data.access_token) return null;
     return data.access_token;
   } catch {
@@ -142,7 +146,7 @@ export const getRecentlyPlayedTracks = query({
     console.log("Found Spotify refresh token for user", args.userId);
     const accessToken = await getSpotifyAccessToken(ctx, args.userId);
     if (!accessToken) {
-      console.log("Failed to get access token for user", args.userId);
+      console.log("Failed to get access token for user | get", args.userId);
       return null;
     }
     console.log("Obtained access token for user", args.userId);

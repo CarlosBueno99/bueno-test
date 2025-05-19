@@ -103,8 +103,6 @@ export default defineSchema({
     userId: v.id("users"),
     steamApiKey: v.optional(v.string()),
     steamId: v.optional(v.string()),
-    spotifyClientId: v.optional(v.string()),
-    spotifyClientSecret: v.optional(v.string()),
     spotifyRefreshToken: v.optional(v.string()),
     locationApiPassword: v.optional(v.string()),
   }).index("by_userId", ["userId"]),

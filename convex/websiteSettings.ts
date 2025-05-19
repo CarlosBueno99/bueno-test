@@ -6,8 +6,6 @@ export const saveWebsiteSettings = mutation({
   args: {
     steamApiKey: v.optional(v.string()),
     steamId: v.optional(v.string()),
-    spotifyClientId: v.optional(v.string()),
-    spotifyClientSecret: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -30,16 +28,12 @@ export const saveWebsiteSettings = mutation({
       await ctx.db.patch(existing._id, {
         steamApiKey: args.steamApiKey ?? existing.steamApiKey,
         steamId: args.steamId ?? existing.steamId,
-        spotifyClientId: args.spotifyClientId ?? existing.spotifyClientId,
-        spotifyClientSecret: args.spotifyClientSecret ?? existing.spotifyClientSecret,
       });
     } else {
       await ctx.db.insert("websiteSettings", {
         userId: user._id,
         steamApiKey: args.steamApiKey ?? "",
         steamId: args.steamId ?? "",
-        spotifyClientId: args.spotifyClientId ?? "",
-        spotifyClientSecret: args.spotifyClientSecret ?? "",
       });
     }
   },

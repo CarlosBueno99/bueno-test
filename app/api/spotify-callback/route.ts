@@ -4,12 +4,21 @@ import { api } from "../../../convex/_generated/api";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
+function getBaseUrl(request: NextRequest) {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const host = forwardedHost || request.headers.get("host");
+  const protocol = forwardedProto;
+  return `${protocol}://${host}`;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
+  const baseUrl = getBaseUrl(request);
 
   if (!code) {
-    return NextResponse.redirect(new URL('/admin?error=no_code_provided', request.url));
+    return NextResponse.redirect(new URL('/admin?error=no_code_provided', baseUrl));
   }
 
   try {
@@ -32,14 +41,14 @@ export async function GET(request: NextRequest) {
     const tokens = await tokenResponse.json();
 
     if (!tokens.refresh_token) {
-      return NextResponse.redirect(new URL(`/admin?error=missing_refresh_token`, request.url));
+      return NextResponse.redirect(new URL(`/admin?error=missing_refresh_token`, baseUrl));
     }
 
     // Save the refresh token to Convex
     await convex.mutation(api.websiteSettings.saveSpotifyRefreshToken, { refreshToken: tokens.refresh_token });
 
-    return NextResponse.redirect(new URL('/admin?spotify=connected', request.url));
+    return NextResponse.redirect(new URL('/admin?spotify=connected', baseUrl));
   } catch (error) {
-    return NextResponse.redirect(new URL(`/admin?error=${encodeURIComponent(String(error))}`, request.url));
+    return NextResponse.redirect(new URL(`/admin?error=${encodeURIComponent(String(error))}`, baseUrl));
   }
 } 

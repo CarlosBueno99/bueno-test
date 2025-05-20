@@ -1,3 +1,4 @@
+import { log } from "console";
 import { mutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -5,8 +6,6 @@ export const saveWebsiteSettings = mutation({
   args: {
     steamApiKey: v.optional(v.string()),
     steamId: v.optional(v.string()),
-    spotifyClientId: v.optional(v.string()),
-    spotifyClientSecret: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -29,16 +28,12 @@ export const saveWebsiteSettings = mutation({
       await ctx.db.patch(existing._id, {
         steamApiKey: args.steamApiKey ?? existing.steamApiKey,
         steamId: args.steamId ?? existing.steamId,
-        spotifyClientId: args.spotifyClientId ?? existing.spotifyClientId,
-        spotifyClientSecret: args.spotifyClientSecret ?? existing.spotifyClientSecret,
       });
     } else {
       await ctx.db.insert("websiteSettings", {
         userId: user._id,
         steamApiKey: args.steamApiKey ?? "",
         steamId: args.steamId ?? "",
-        spotifyClientId: args.spotifyClientId ?? "",
-        spotifyClientSecret: args.spotifyClientSecret ?? "",
       });
     }
   },
@@ -51,6 +46,8 @@ export const saveSpotifyRefreshToken = mutation({
     v.object({ success: v.literal(false), error: v.string() })
   ),
   handler: async (ctx, args) => {
+    console.log("Saving ctx:", await ctx.auth.getUserIdentity());
+    console.log("Saving Spotify refresh token:", args.refreshToken);
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return { success: false as const, error: "Not authenticated" };
@@ -75,6 +72,7 @@ export const saveSpotifyRefreshToken = mutation({
           spotifyRefreshToken: args.refreshToken,
         });
       }
+      
     } catch (err) {
       return { success: false as const, error: "Failed to save refresh token: " + (err instanceof Error ? err.message : String(err)) };
     }

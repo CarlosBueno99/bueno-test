@@ -1,15 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../convex/_generated/api";
+import { auth } from '@clerk/nextjs/server';
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+
+function getBaseUrl(request: NextRequest) {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const host = forwardedHost || request.headers.get("host");
+  const protocol = forwardedProto;
+  return `${protocol}://${host}`;
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
+  const baseUrl = getBaseUrl(request);
 
   if (!code) {
-    return NextResponse.redirect(new URL('/admin?error=no_code_provided', request.url));
+    return NextResponse.redirect(new URL('/admin?error=no_code_provided', baseUrl));
   }
 
   try {
@@ -30,16 +40,33 @@ export async function GET(request: NextRequest) {
     });
 
     const tokens = await tokenResponse.json();
+    console.log(tokens);
 
     if (!tokens.refresh_token) {
-      return NextResponse.redirect(new URL(`/admin?error=missing_refresh_token`, request.url));
+      return NextResponse.redirect(new URL(`/admin?error=missing_refresh_token`, baseUrl));
     }
 
-    // Save the refresh token to Convex
-    await convex.mutation(api.websiteSettings.saveSpotifyRefreshToken, { refreshToken: tokens.refresh_token });
+    // Get Clerk session and JWT
+    const { userId, getToken } = await auth();
+    if (!userId) {
+      return NextResponse.redirect(new URL('/admin?error=not_authenticated', baseUrl));
+    }
+    const jwt = await getToken({ template: 'convex' });
+    if (!jwt) {
+      return NextResponse.redirect(new URL('/admin?error=missing_jwt', baseUrl));
+    }
+    convex.setAuth(jwt);
 
-    return NextResponse.redirect(new URL('/admin?spotify=connected', request.url));
+    // Save the refresh token to Convex
+    try {
+      await convex.mutation(api.websiteSettings.saveSpotifyRefreshToken, { refreshToken: tokens.refresh_token });
+      console.log("Refresh token saved to Convex");
+    } catch (error) {
+      console.error(error);
+    }
+
+    return NextResponse.redirect(new URL('/admin?spotify=connected', baseUrl));
   } catch (error) {
-    return NextResponse.redirect(new URL(`/admin?error=${encodeURIComponent(String(error))}`, request.url));
+    return NextResponse.redirect(new URL(`/admin?error=${encodeURIComponent(String(error))}`, baseUrl));
   }
 } 

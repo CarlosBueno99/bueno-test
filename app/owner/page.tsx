@@ -21,9 +21,7 @@ export default function OwnerPage() {
 
   const [apiKeys, setApiKeys] = useState({
     steamApiKey: "sk_************",
-    steamId: "",
-    spotifyClientId: "sp_************",
-    spotifyClientSecret: "spcs_************"
+    steamId: ""
   });
 
   const [deploymentInfo, setDeploymentInfo] = useState({
@@ -116,48 +114,8 @@ export default function OwnerPage() {
                           saveWebsiteSettings({
                             steamApiKey,
                             steamId,
-                            spotifyClientId: apiKeys.spotifyClientId,
-                            spotifyClientSecret: apiKeys.spotifyClientSecret,
                           })
                         }
-                      >
-                        Update
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label htmlFor="spotify-id" className="text-sm font-medium">Spotify Client ID</label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="spotify-id"
-                        type="password"
-                        value={apiKeys.spotifyClientId}
-                        onChange={(e) => setApiKeys({...apiKeys, spotifyClientId: e.target.value})}
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => saveWebsiteSettings({ spotifyClientId: apiKeys.spotifyClientId })}
-                      >
-                        Update
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label htmlFor="spotify-secret" className="text-sm font-medium">Spotify Client Secret</label>
-                    <div className="flex gap-2">
-                      <Input
-                        id="spotify-secret"
-                        type="password"
-                        value={apiKeys.spotifyClientSecret}
-                        onChange={(e) => setApiKeys({...apiKeys, spotifyClientSecret: e.target.value})}
-                      />
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => saveWebsiteSettings({ spotifyClientSecret: apiKeys.spotifyClientSecret })}
                       >
                         Update
                       </Button>
@@ -180,8 +138,6 @@ export default function OwnerPage() {
                           saveWebsiteSettings({
                             steamApiKey,
                             steamId,
-                            spotifyClientId: apiKeys.spotifyClientId,
-                            spotifyClientSecret: apiKeys.spotifyClientSecret,
                           })
                         }
                       >

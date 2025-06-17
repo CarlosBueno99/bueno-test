@@ -16,8 +16,11 @@ export async function POST(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
+    console.log("user + url", userId, url);
     const metadata = await extractMetadataFromUrl(url);
+    console.log("metadata", metadata);
     const insertedDate = new Date().toISOString();
+    console.log("insertedDate", insertedDate);
     // Insert location via Convex mutation
     let id;
     try {

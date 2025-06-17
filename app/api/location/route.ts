@@ -68,7 +68,9 @@ async function extractMetadataFromUrl(url: string) {
   const response = await fetch(
     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`
   );
+  console.log("response", response);
   const data = await response.json();
+  console.log("data", data);
   return {
     latitude: coords.latitude,
     longitude: coords.longitude,

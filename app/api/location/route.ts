@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       insertedDate,
       latitude: Number(data.latitude),
       longitude: Number(data.longitude),
-      displayName: data.name || data.displayName || data.full || data.url,
+      displayName: data.full,
     };
 
     // Add optional fields if they exist

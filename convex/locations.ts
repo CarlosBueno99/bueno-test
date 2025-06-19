@@ -4,28 +4,30 @@ import { Id } from "./_generated/dataModel";
 import { ConvexError } from "convex/values";
 
 export const addLocation = mutation({
-  args: {
+  args: v.object({
     userId: v.id("users"),
     url: v.string(),
     insertedDate: v.string(),
     latitude: v.number(),
     longitude: v.number(),
     displayName: v.string(),
-  },
+    altitude: v.optional(v.number()),
+    street: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    zip: v.optional(v.string()),
+    region: v.optional(v.string()),
+    phoneNumber: v.optional(v.string()),
+    label: v.optional(v.string()),
+    full: v.optional(v.string()),
+  }),
   handler: async (ctx, args) => {
     // Check if the user exists
     const user = await ctx.db.get(args.userId);
     if (!user) {
       throw new ConvexError("User does not exist");
     }
-    return await ctx.db.insert("locations", {
-      userId: args.userId,
-      url: args.url,
-      insertedDate: args.insertedDate,
-      latitude: args.latitude,
-      longitude: args.longitude,
-      displayName: args.displayName,
-    });
+    return await ctx.db.insert("locations", args);
   },
 });
 

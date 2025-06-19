@@ -97,6 +97,16 @@ export default defineSchema({
     latitude: v.number(),
     longitude: v.number(),
     displayName: v.string(),
+    // Optional fields
+    altitude: v.optional(v.number()),
+    street: v.optional(v.string()),
+    city: v.optional(v.string()),
+    state: v.optional(v.string()),
+    zip: v.optional(v.string()),
+    region: v.optional(v.string()),
+    phoneNumber: v.optional(v.string()),
+    label: v.optional(v.string()),
+    full: v.optional(v.string()),
   }),
 
   websiteSettings: defineTable({

@@ -9,29 +9,32 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 interface LocationRequest {
   latitude: number;
   userId: string;
-  fullLocation: string;
+  longitude: number;
+  altitude: number;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  region: string;
+  phoneNumber: string;
+  label: string;
+  url: string;
+  name: string;
+  full: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { latitude, userId, fullLocation } = await request.json() as LocationRequest;
+    const {userId, latitude, longitude, altitude, street, city, state, zip, region, phoneNumber, label, url, name, full } = await request.json() as LocationRequest;
     
-    if (!latitude) {
-      return NextResponse.json({ error: "Missing latitude" }, { status: 400 });
+    if (!latitude || !longitude || !altitude || !street || !city || !state || !zip || !region || !phoneNumber || !label || !url || !name || !full) {
+      return NextResponse.json({ error: "Missing a field" }, { status: 400 });
     }
     
-    if (!userId) {
-      return NextResponse.json({ error: "Missing userId" }, { status: 400 });
-    }
-    
-    if (!fullLocation) {
-      return NextResponse.json({ error: "Missing fullLocation" }, { status: 400 });
-    }
-    
-    console.log("user + latitude", userId, latitude);
+
     const insertedDate = new Date().toISOString();
+    console.log("all the data", userId, latitude, longitude, altitude, street, city, state, zip, region, phoneNumber, label, url, name, full);
     console.log("insertedDate", insertedDate);
-    console.log("fullLocation", fullLocation);
 
     // TODO: Add your location processing logic here
     

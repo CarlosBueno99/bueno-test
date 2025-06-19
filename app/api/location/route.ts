@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
     console.log("user + latitude", userId, latitude);
     const insertedDate = new Date().toISOString();
     console.log("insertedDate", insertedDate);
+    console.log("fullLocation", fullLocation);
 
     // TODO: Add your location processing logic here
     

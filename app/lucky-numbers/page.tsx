@@ -28,11 +28,11 @@ export default function LuckyNumbersPage() {
         <h1 className="text-3xl text-center font-bold mb-8">Números da sorte</h1>
         <Card>
           <CardContent className="p-8 text-center">
-            <div className="flex justify-center space-x-4 mb-8">
+            <div className="flex justify-center flex-wrap gap-4 mb-8">
               {luckyNumbers.map((num, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-center w-20 h-20 bg-green-500 text-white rounded-full text-3xl font-bold shadow-lg transform hover:scale-110 transition-transform"
+                  className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-green-500 text-white rounded-full text-2xl md:text-3xl font-bold shadow-lg transform hover:scale-110 transition-transform"
                 >
                   {num}
                 </div>

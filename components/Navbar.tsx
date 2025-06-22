@@ -25,6 +25,7 @@ export function Navbar() {
   
   const navLinks = [
     { name: "Home", href: "/" },
+    { name: "Lucky Numbers", href: "/lucky-numbers" },
   ];
 
   // Permission-based links

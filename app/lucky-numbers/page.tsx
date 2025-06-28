@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function LuckyNumbersPage() {
   const [luckyNumbers, setLuckyNumbers] = useState<number[]>([]);
   const [quinaNumbers, setQuinaNumbers] = useState<number[]>([]);
+  const [copiedMega, setCopiedMega] = useState(false);
+  const [copiedQuina, setCopiedQuina] = useState(false);
 
   const generateLuckyNumbers = () => {
     const numbers = new Set<number>();
@@ -25,6 +27,12 @@ export default function LuckyNumbersPage() {
       numbers.add(randomNumber);
     }
     setQuinaNumbers(Array.from(numbers).sort((a, b) => a - b));
+  };
+
+  const handleCopy = (numbers: number[], setCopied: (v: boolean) => void) => {
+    navigator.clipboard.writeText(numbers.join(", "));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
   };
 
   useEffect(() => {
@@ -52,7 +60,12 @@ export default function LuckyNumbersPage() {
                 </div>
               ))}
             </div>
-            <Button onClick={generateLuckyNumbers}>Gerar novos números</Button>
+            <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
+              <Button onClick={generateLuckyNumbers}>Gerar novos números</Button>
+              <Button variant="outline" onClick={() => handleCopy(luckyNumbers, setCopiedMega)}>
+                {copiedMega ? "Copiado!" : "Copiar"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
@@ -72,7 +85,12 @@ export default function LuckyNumbersPage() {
                 </div>
               ))}
             </div>
-            <Button onClick={generateQuinaNumbers}>Gerar novos números</Button>
+            <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
+              <Button onClick={generateQuinaNumbers}>Gerar novos números</Button>
+              <Button variant="outline" onClick={() => handleCopy(quinaNumbers, setCopiedQuina)}>
+                {copiedQuina ? "Copiado!" : "Copiar"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </main>
